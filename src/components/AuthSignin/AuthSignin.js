@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../../store/auth-context";
 
 const AuthSignin = () => {
     const navigate = useNavigate();
+    const authCtx = useContext(AuthContext);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -41,15 +43,17 @@ const AuthSignin = () => {
             const data = await res.json();
 
             if (res.ok) {
-                // clear fields
+                // change state and store token
+                authCtx.onLogin(data.idToken);
 
+                // clear fields
                 setFormData({
                     email: "",
                     password: "",
                 });
 
                 // redirect the user
-                navigate("/home", { replace: true });
+                navigate("/", { replace: true });
             } else {
                 throw new Error(data.error.message);
             }

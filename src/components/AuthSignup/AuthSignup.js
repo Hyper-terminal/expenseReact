@@ -57,9 +57,7 @@ const AuthSignup = () => {
                     confirmPassword: "",
                 });
 
-                alert("Successfully created");
-
-                navigate("/auth/signin");
+                navigate("/", { replace: true });
             } else {
                 throw new Error(data.error.message);
             }

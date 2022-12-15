@@ -1,0 +1,15 @@
+.close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #ff80cc;
+    color: #ff80cc;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.close:hover {
+    color: white;
+}
