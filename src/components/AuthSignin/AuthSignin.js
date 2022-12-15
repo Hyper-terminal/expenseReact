@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-const AuthForm = () => {
+const AuthSignin = () => {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-        confirmPassword: "",
     });
 
     const inputHandler = (event) => {
@@ -19,15 +21,10 @@ const AuthForm = () => {
         event.preventDefault();
 
         try {
-            if (formData.password !== formData.confirmPassword) {
-                alert("password not matched!");
-                return;
-            }
-
             // make post request to backend
 
             const res = await fetch(
-                `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_API}`,
+                `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_API}`,
                 {
                     method: "post",
                     headers: {
@@ -44,15 +41,15 @@ const AuthForm = () => {
             const data = await res.json();
 
             if (res.ok) {
-                console.log(data.idToken);
-
                 // clear fields
 
                 setFormData({
                     email: "",
                     password: "",
-                    confirmPassword: "",
                 });
+
+                // redirect the user
+                navigate("/home", { replace: true });
             } else {
                 throw new Error(data.error.message);
             }
@@ -68,7 +65,7 @@ const AuthForm = () => {
                 className="pa4 br2 shadow-3 measure center"
             >
                 <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-                    <legend className="f2 tc fw8 ph0 mh0">Sign Up</legend>
+                    <legend className="f2 tc fw8 ph0 mh0">Sign In</legend>
                     <div className="mt3">
                         <label
                             className="db fw6 lh-copy f6"
@@ -78,7 +75,7 @@ const AuthForm = () => {
                         </label>
                         <input
                             value={formData.email}
-                            className="pa2 br2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                            className="pa2 br2 input-reset ba bg-transparent  hover-bg-black hover-white w-100"
                             type="email"
                             name="email"
                             onChange={inputHandler}
@@ -98,37 +95,23 @@ const AuthForm = () => {
                             required
                         />
                     </div>
-
-                    <div className="mv3">
-                        <label className="db fw6 lh-copy f6" htmlFor="password">
-                            Confirm Password
-                        </label>
-                        <input
-                            className="b br2 pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                            type="password"
-                            onChange={inputHandler}
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            required
-                        />
-                    </div>
                 </fieldset>
                 <div className="">
                     <button
                         className="f6 link dim br3 ph4 pv2 mb2 dib white  bg-dark-gray pointer b--none"
                         type="submit"
                     >
-                        Sign up
+                        Sign in
                     </button>
                 </div>
                 <div className="lh-copy mt3">
-                    <a href="#0" className="f6 link dim black dib">
-                        Have an account? Login
-                    </a>
+                    <Link to="/auth/signup" className="f6 link dim black dib">
+                        Don't have an account? Signup
+                    </Link>
                 </div>
             </form>
         </main>
     );
 };
 
-export default AuthForm;
+export default AuthSignin;
