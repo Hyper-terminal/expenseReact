@@ -1,8 +1,9 @@
-import React, { Suspense, useContext } from "react";
-import { Route, Routes } from "react-router-dom";
+import React, {Suspense, useContext} from "react";
+import {Route, Routes} from "react-router-dom";
 import Layout from "./components/Layout/Layout/Layout";
 import LoadingSpinner from "./components/UI/LoadingSpinner/LoadingSpinner";
 import AuthContext from "./store/auth-context";
+import ErrorPage from "./pages/ErrorPage/ErrorPage";
 
 const UpdateForm = React.lazy(() =>
     import("./components/UpdateForm/UpdateForm")
@@ -20,34 +21,26 @@ const Home = React.lazy(() => import("./pages/Home/Home"));
 const App = () => {
     const authCtx = useContext(AuthContext);
 
-    console.log(authCtx.isAuthenticated);
 
     return (
-            <Suspense fallback={<LoadingSpinner />}>
-                <Layout>
-                    <Routes>
-                        <Route path="/" element={<Home />} />
+        <Suspense fallback={<LoadingSpinner/>}>
+            <Layout>
+                <Routes>
+                    <Route path="/" element={<Home/>}/>
 
-                        {authCtx.isAuthenticated && (
-                            <Route
-                                path="/update_profile"
-                                element={<UpdateForm />}
-                            />
-                        )}
-                        
-                        <Route path="/about" element={<About />} />
+                    <Route path="/about" element={<About/>}/>
 
-                        {!authCtx.isAuthenticated && (
-                            <Route path="/auth">
-                                <Route path="signin" element={<AuthSignin />} />
-                                <Route path="signup" element={<AuthSignup />} />
-                            </Route>
-                        )}
+                    {!authCtx.isAuthenticated && (
+                        <Route path="/auth">
+                            <Route path="signin" element={<AuthSignin/>}/>
+                            <Route path="signup" element={<AuthSignup/>}/>
+                        </Route>
+                    )}
 
-                        <Route path="*" element={<h1>Not found</h1>} />
-                    </Routes>
-                </Layout>
-            </Suspense>
+                    <Route path="*" element={<ErrorPage/>}/>
+                </Routes>
+            </Layout>
+        </Suspense>
     );
 };
 

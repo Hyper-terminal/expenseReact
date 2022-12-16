@@ -1,32 +1,24 @@
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {useContext, useState} from "react";
 import Profile from "../../components/UI/Modals/Profile";
 import AuthContext from "../../store/auth-context";
 
 const Home = () => {
-    const [isProfileOpen, setIsProfileOpen] = useState(true);
-    const navigate = useNavigate();
     const authCtx = useContext(AuthContext);
 
-    const modalClickHandler = () => {
-        setIsProfileOpen(false);
-    };
+    const [isOpen, setIsOpen] = useState(false);
 
-    const buttonClickHandler = () => {
-        navigate("/update_profile");
-    };
+    const formToggleHandler = () => {
+        setIsOpen(true)
+    }
 
     return (
         <>
-            {authCtx.isAuthenticated && isProfileOpen && (
-                <Profile
-                    onButtonClick={buttonClickHandler}
-                    onClose={modalClickHandler}
-                />
-            )}
-            <h1 className="fw-8 tc">Home page</h1>
-        </>
-    );
+            {authCtx.isAuthenticated && !authCtx.isProfileCompleted && (<Profile onClick={formToggleHandler}/>)}
+            {authCtx.isAuthenticated && !authCtx.isProfileCompleted && isOpen && <UpdateForm />}
+            {authCtx.isProfileCompleted && <h1>Home Page</h1>}
+
+
+        </>);
 };
 
 export default Home;

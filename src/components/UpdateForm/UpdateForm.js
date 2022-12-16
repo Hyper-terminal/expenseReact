@@ -3,11 +3,12 @@ import profileIcon from "../../assets/name_icon.svg";
 import userImageIcon from "../../assets/user_image.svg";
 import AuthContext from "../../store/auth-context";
 
-const UpdateForm = () => {
+const UpdateForm = (props) => {
     const authCtx = useContext(AuthContext);
 
     const nameRef = useRef();
     const picUrlRef = useRef();
+
 
     const submitHandler = async (event) => {
         event.preventDefault();
@@ -46,11 +47,11 @@ const UpdateForm = () => {
         <section className="w-100 mt4 tc">
             <form
                 onSubmit={submitHandler}
-                class="pa3 mw6 br4 bg-washed-red shadow-5 bb bl center black-80 b--silver"
+                className="pa3 mw6 br4 bg-washed-red shadow-5 bb bl center black-80 b--silver"
             >
                 <h1 className="black underline georgia mb4">Update Details</h1>
-                <div class="measure mr4 dib">
-                    <label for="name" class="f4 b db mb2">
+                <div className="measure mr4 dib">
+                    <label htmlFor="name" className="f4 b db mb2">
                         <img
                             className="dib h1"
                             src={profileIcon}
@@ -61,24 +62,24 @@ const UpdateForm = () => {
                     <input
                         ref={nameRef}
                         name="name"
-                        class="input-reset ba b--light-silver br3 pa2 mb2 db w-100"
+                        className="input-reset ba b--light-silver br3 pa2 mb2 db w-100"
                         type="text"
                         aria-describedby="name-desc"
                     />
                 </div>
-                <div class="measure  mr4 dib">
-                    <label for="name" class="f4 b db mb2">
+                <div className="measure  mr4 dib">
+                    <label htmlFor="name" className="f4 b db mb2">
                         <img
                             src={userImageIcon}
                             className="h1 dib"
                             alt="profile input"
-                        />{" "}
+                        />
                         Profile Photo Url
                     </label>
                     <input
                         ref={picUrlRef}
                         name="profileImage"
-                        class="input-reset ba b--light-silver br3 pa2 mb2 db w-100"
+                        className="input-reset ba b--light-silver br3 pa2 mb2 db w-100"
                         type="text"
                         aria-describedby="name-desc"
                     />
