@@ -47,7 +47,7 @@ const ExpenseForm = (props) => {
                             type="text"
                             ref={descriptionRef}
                             name="description"
-                            placeholder="for what?"
+                            placeholder="For what it was?"
                             required
                         />
                     </div>

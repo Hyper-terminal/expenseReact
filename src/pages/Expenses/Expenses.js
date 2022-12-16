@@ -1,23 +1,65 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ExpenseForm from "../../components/Expenses/ExpenseForm/ExpenseForm";
 import ExpenseList from "../../components/Expenses/ExpenseList/ExpenseList";
+import ErrorModal from "../../components/UI/Modals/ErrorModal";
 
 const Expenses = () => {
     const [expenses, setExpenses] = useState([]);
-    console.log(expenses);
     const [isOpen, setIsOpen] = useState(false);
+    let err = false;
 
     const clickHandler = () => {
         setIsOpen(true);
     };
 
-    const submitHandler = (item) => {
-        setIsOpen(false);
-        setExpenses((prev) => [...prev, item]);
+    const fetchExpenses = useCallback(async () => {
+        const res = await fetch(
+            "https://expensetracker-77f96-default-rtdb.asia-southeast1.firebasedatabase.app/expenses.json"
+        );
+
+        const data = await res.json();
+
+        if (res.ok) {
+            const result = [];
+            for (let key in data) {
+                result.push(data[key]);
+            }
+
+            setExpenses((prev) => [...result]);
+        } else {
+            err = data.error.message;
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchExpenses();
+    }, [fetchExpenses]);
+
+    const submitHandler = async (item) => {
+        const res = await fetch(
+            "https://expensetracker-77f96-default-rtdb.asia-southeast1.firebasedatabase.app/expenses.json",
+            {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(item),
+            }
+        );
+
+        const data = await res.json();
+
+        if (res.ok) {
+            setIsOpen(false);
+            setExpenses((prev) => [...prev, item]);
+        } else {
+            err = data.errpr.message;
+        }
     };
 
     return (
         <>
+            {err && <ErrorModal message={err} />}
             {isOpen && <ExpenseForm onSubmitExpense={submitHandler} />}
             {!isOpen && (
                 <div
@@ -29,7 +71,9 @@ const Expenses = () => {
             )}
 
             {expenses.length > 0 && <ExpenseList expenses={expenses} />}
-            {expenses.length < 1 && <h1 className="tc mt5">No Expenses Found</h1>}
+            {expenses.length < 1 && (
+                <h1 className="tc mt5">No Expenses Found</h1>
+            )}
         </>
     );
 };
