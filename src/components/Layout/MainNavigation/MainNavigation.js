@@ -44,9 +44,9 @@ const MainNavigation = () => {
     };
 
     return (
-        <div>
-            <header className="ba bg-near-white black-80 tc pb4 avenir">
-                <h1 className="mt2 mb0 baskerville i fw1 f1">Title</h1>
+        <>
+            <header className="bb bg-near-white black-80 tc pb4 avenir">
+                <h1 className="mt0 mb0 baskerville i fw1 f1">Title</h1>
                 <h2 className="mt2 mb0 f6 fw4 ttu tracked">
                     Your amazing subtitle
                 </h2>
@@ -101,7 +101,7 @@ const MainNavigation = () => {
                     )}
                 </nav>
             </header>
-        </div>
+        </>
     );
 };
 

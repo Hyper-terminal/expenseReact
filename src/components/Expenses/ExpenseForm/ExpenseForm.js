@@ -1,6 +1,9 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
+import ExpenseContext from "../../../store/expense-context";
 
 const ExpenseForm = (props) => {
+    const expenseCtx = useContext(ExpenseContext);
+
     const amountRef = useRef();
     const descriptionRef = useRef();
     const categoryRef = useRef();
@@ -12,7 +15,9 @@ const ExpenseForm = (props) => {
         const description = descriptionRef.current.value;
         const category = categoryRef.current.value;
 
-        props.onSubmitExpense({ price, description, category });
+        expenseCtx.onAdd({ price, description, category });
+
+        props.onToggle();
     };
 
     return (
