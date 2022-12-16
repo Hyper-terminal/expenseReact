@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ErrorModal from "../UI/Modals/ErrorModal";
 
 const AuthSignup = () => {
     const navigate = useNavigate();
@@ -9,8 +10,10 @@ const AuthSignup = () => {
         password: "",
         confirmPassword: "",
     });
+    const [err, setErr] = useState(false);
 
     const inputHandler = (event) => {
+        setErr(false);
         const { name, value } = event.target;
 
         setFormData((prev) => {
@@ -57,10 +60,11 @@ const AuthSignup = () => {
 
                 navigate("/", { replace: true });
             } else {
-                 new Error(data.error.message);
+                setErr(data.error.message);
+                new Error(data.error.message);
             }
         } catch (err) {
-            alert(err);
+            console.log(err);
         }
     };
 
@@ -72,6 +76,7 @@ const AuthSignup = () => {
             >
                 <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                     <legend className="f2 tc fw8 ph0 mh0">Sign Up</legend>
+                    {err && <ErrorModal />}
                     <div className="mt3">
                         <label
                             className="db fw6 lh-copy f6"
@@ -101,7 +106,6 @@ const AuthSignup = () => {
                             required
                         />
                     </div>
-
                     <div className="mv3">
                         <label className="db fw6 lh-copy f6" htmlFor="password">
                             Confirm Password

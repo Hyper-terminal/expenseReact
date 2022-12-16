@@ -1,10 +1,13 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
+import ErrorModal from "../UI/Modals/ErrorModal";
 
 const AuthSignin = () => {
     const navigate = useNavigate();
     const authCtx = useContext(AuthContext);
+
+    const [err, setErr] = useState("");
 
     const [formData, setFormData] = useState({
         email: "",
@@ -12,6 +15,8 @@ const AuthSignin = () => {
     });
 
     const inputHandler = (event) => {
+        setErr(false);
+
         const { name, value } = event.target;
 
         setFormData((prev) => {
@@ -55,10 +60,11 @@ const AuthSignin = () => {
                 // redirect the user
                 navigate("/", { replace: true });
             } else {
+                setErr(data.error.message);
                 throw new Error(data.error.message);
             }
         } catch (err) {
-            alert(err);
+            console.log(err);
         }
     };
 
@@ -70,6 +76,7 @@ const AuthSignin = () => {
             >
                 <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                     <legend className="f2 tc fw8 ph0 mh0">Sign In</legend>
+                    {err && <ErrorModal message={err} />}
                     <div className="mt3">
                         <label
                             className="db fw6 lh-copy f6"
@@ -112,7 +119,10 @@ const AuthSignin = () => {
                     <Link to="/auth/signup" className="f6 link dim black db">
                         New User? Signup
                     </Link>
-                    <Link to="/auth/password_forget" className="f6 link dim black db">
+                    <Link
+                        to="/auth/password_forget"
+                        className="f6 link dim black db"
+                    >
                         Forget your password?
                     </Link>
                 </div>

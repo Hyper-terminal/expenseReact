@@ -47,7 +47,7 @@ const UpdateForm = (props) => {
         <section className="w-100 mt4 tc">
             <form
                 onSubmit={submitHandler}
-                className="pa3 mw6 br4 bg-washed-red shadow-5 bb bl center black-80 b--silver"
+                className="pa3 mw7 br4 bg-washed-red shadow-5 bb bl center black-80 b--silver"
             >
                 <h1 className="black underline georgia mb4">Update Details</h1>
                 <div className="measure mr4 dib">

@@ -9,14 +9,14 @@ const Home = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const formToggleHandler = () => {
-        setIsOpen((prev) => !prev);
+        setIsOpen(true);
     };
 
     return (
         <>
-            {authCtx.isAuthenticated && !authCtx.isProfileCompleted && (
-                <Profile onClick={formToggleHandler} />
-            )}
+            {authCtx.isAuthenticated &&
+                !authCtx.isProfileCompleted &&
+                !isOpen && <Profile onClick={formToggleHandler} />}
             {authCtx.isAuthenticated &&
                 !authCtx.isProfileCompleted &&
                 isOpen && <UpdateForm />}
@@ -29,7 +29,7 @@ const Home = () => {
                     </p>
                 </div>
             )}
-            {authCtx.isAuthenticated && <h1 className="tc fw-8">Home</h1>}
+            {/* {authCtx.isAuthenticated && <h1 className="tc fw-8">Home</h1>} */}
         </>
     );
 };

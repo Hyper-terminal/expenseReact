@@ -15,7 +15,7 @@ const MainNavigation = () => {
             navigate("/auth/signin", { replace: true });
         } else {
             // means login
-            navigate("/auth/signin");
+            navigate("/auth/signin", { replace: true });
         }
     };
 
@@ -60,15 +60,19 @@ const MainNavigation = () => {
                     >
                         Home
                     </NavLink>
-                    <NavLink
-                        className="f6 f5-l link bg-animate black-80 hover-bg-light-green dib pa3 ph4-l"
-                        to="/products"
-                        style={({ isActive }) =>
-                            isActive ? { background: "#9EEBCF " } : undefined
-                        }
-                    >
-                        Products
-                    </NavLink>
+                    {authCtx.isAuthenticated && (
+                        <NavLink
+                            className="f6 f5-l link bg-animate black-80 hover-bg-light-green dib pa3 ph4-l"
+                            to="/expenses"
+                            style={({ isActive }) =>
+                                isActive
+                                    ? { background: "#9EEBCF " }
+                                    : undefined
+                            }
+                        >
+                            Expenses
+                        </NavLink>
+                    )}
 
                     <NavLink
                         className="f6 f5-l mr4 link bg-animate black-80 hover-bg-light-pink dib pa3 ph4-l"

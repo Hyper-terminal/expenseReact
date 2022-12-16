@@ -5,6 +5,7 @@ import LoadingSpinner from "./components/UI/LoadingSpinner/LoadingSpinner";
 import AuthContext from "./store/auth-context";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 
+const Expenses = React.lazy(() => import("./pages/Expenses/Expenses"));
 const UpdateForm = React.lazy(() =>
     import("./components/UpdateForm/UpdateForm")
 );
@@ -31,6 +32,10 @@ const App = () => {
                     <Route path="/" element={<Home />} />
 
                     <Route path="/about" element={<About />} />
+
+                    {authCtx.isAuthenticated && (
+                        <Route path="/expenses" element={<Expenses />} />
+                    )}
 
                     {!authCtx.isAuthenticated && (
                         <Route path="/auth">
