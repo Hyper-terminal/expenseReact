@@ -20,12 +20,13 @@ const Home = React.lazy(() => import("./pages/Home/Home"));
 
 const App = () => {
     const authCtx = useContext(AuthContext);
-
-
     return (
         <Suspense fallback={<LoadingSpinner/>}>
+
+
             <Layout>
                 <Routes>
+
                     <Route path="/" element={<Home/>}/>
 
                     <Route path="/about" element={<About/>}/>
@@ -38,8 +39,11 @@ const App = () => {
                     )}
 
                     <Route path="*" element={<ErrorPage/>}/>
+
+
                 </Routes>
             </Layout>
+
         </Suspense>
     );
 };

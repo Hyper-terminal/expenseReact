@@ -47,8 +47,6 @@ const AuthSignup = () => {
             const data = await res.json();
 
             if (res.ok) {
-                console.log(data.idToken);
-
                 // clear fields
 
                 setFormData({
@@ -59,7 +57,7 @@ const AuthSignup = () => {
 
                 navigate("/", { replace: true });
             } else {
-                throw new Error(data.error.message);
+                 new Error(data.error.message);
             }
         } catch (err) {
             alert(err);
