@@ -37,7 +37,8 @@ const AuthProvider = (props) => {
 
         if (res.ok) {
             setIsVerified(data.users[0].emailVerified);
-            setIsProfileCompleted(true);
+            const emailComplete = data.users[0].displayName ? true : false;
+            setIsProfileCompleted(emailComplete);
         } else {
             console.log("Token not valid");
         }

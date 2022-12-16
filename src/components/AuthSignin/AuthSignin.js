@@ -109,8 +109,11 @@ const AuthSignin = () => {
                     </button>
                 </div>
                 <div className="lh-copy mt3">
-                    <Link to="/auth/signup" className="f6 link dim black dib">
-                        Don't have an account? Signup
+                    <Link to="/auth/signup" className="f6 link dim black db">
+                        New User? Signup
+                    </Link>
+                    <Link to="/auth/password_forget" className="f6 link dim black db">
+                        Forget your password?
                     </Link>
                 </div>
             </form>

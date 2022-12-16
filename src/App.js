@@ -1,5 +1,5 @@
-import React, {Suspense, useContext} from "react";
-import {Route, Routes} from "react-router-dom";
+import React, { Suspense, useContext } from "react";
+import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout/Layout";
 import LoadingSpinner from "./components/UI/LoadingSpinner/LoadingSpinner";
 import AuthContext from "./store/auth-context";
@@ -7,6 +7,10 @@ import ErrorPage from "./pages/ErrorPage/ErrorPage";
 
 const UpdateForm = React.lazy(() =>
     import("./components/UpdateForm/UpdateForm")
+);
+
+const PasswordChange = React.lazy(() =>
+    import("./pages/PasswordChange/PasswordChange")
 );
 
 const AuthSignin = React.lazy(() =>
@@ -21,29 +25,27 @@ const Home = React.lazy(() => import("./pages/Home/Home"));
 const App = () => {
     const authCtx = useContext(AuthContext);
     return (
-        <Suspense fallback={<LoadingSpinner/>}>
-
-
+        <Suspense fallback={<LoadingSpinner />}>
             <Layout>
                 <Routes>
+                    <Route path="/" element={<Home />} />
 
-                    <Route path="/" element={<Home/>}/>
-
-                    <Route path="/about" element={<About/>}/>
+                    <Route path="/about" element={<About />} />
 
                     {!authCtx.isAuthenticated && (
                         <Route path="/auth">
-                            <Route path="signin" element={<AuthSignin/>}/>
-                            <Route path="signup" element={<AuthSignup/>}/>
+                            <Route path="signin" element={<AuthSignin />} />
+                            <Route path="signup" element={<AuthSignup />} />
+                            <Route
+                                path="password_forget"
+                                element={<PasswordChange />}
+                            />
                         </Route>
                     )}
 
-                    <Route path="*" element={<ErrorPage/>}/>
-
-
+                    <Route path="*" element={<ErrorPage />} />
                 </Routes>
             </Layout>
-
         </Suspense>
     );
 };
