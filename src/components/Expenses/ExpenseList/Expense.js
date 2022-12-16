@@ -1,8 +1,10 @@
 import React from "react";
+import classes from "./Expense.module.css"
 
 const Expense = (props) => {
     return (
-        <div className="mw6 shadow-5 db br3 pa2 mt4 ml3 mr3 bg-moon-gray">
+        <div className="mw6 shadow-5 relative db br3 pa2 mt4 ml3 mr3 bg-moon-gray">
+            <button className={`br-100 h2 w2 bg-red b--none red pointer shadow-5 hover-white ${classes.delete}`}>X</button>
             <div className="flex flex-column align-between athelas ml0 mt0 pl4 black-90 bl bw2 b--blue">
                 <h1>
                     <span className="underline purple f3 fw8">PRICE:</span> ₹
