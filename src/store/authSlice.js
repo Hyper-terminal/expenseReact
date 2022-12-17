@@ -22,8 +22,8 @@ const authSlice = createSlice({
             state.token = null;
         },
         update(state, action) {
-            state.isVerified = true;
-            state.isProfileComplete = action.payload;
+            state.isVerified = action.payload.verify;
+            state.isProfileComplete = action.payload.profile;
         },
     },
 });

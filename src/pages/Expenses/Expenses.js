@@ -1,11 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ExpenseForm from "../../components/Expenses/ExpenseForm/ExpenseForm";
 import ExpenseList from "../../components/Expenses/ExpenseList/ExpenseList";
 import ErrorModal from "../../components/UI/Modals/ErrorModal";
-import ExpenseContext from "../../store/expense-context";
+import { expenseActions } from "../../store/expenseSlice";
+import { getExpenses } from "../../utils/expenseApi";
 
 const Expenses = () => {
-    const expenseCtx = useContext(ExpenseContext);
+    const expenseErr = useSelector((state) => state.expense.error);
+    const expenses = useSelector((state) => state.expense.expenses);
+    const dispatch = useDispatch();
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -13,9 +17,27 @@ const Expenses = () => {
         setIsOpen((prev) => !prev);
     };
 
+    const getAllExpenses = useCallback(async () => {
+        const { res, data } = await getExpenses();
+
+        if (res.ok) {
+            const result = [];
+            for (let key in data) {
+                result.push({ id: key.toString(), ...data[key] });
+            }
+            dispatch(expenseActions.getExpense(result));
+        } else {
+            dispatch(expenseActions.errorInExpense(data.error.message));
+        }
+    }, []);
+
+    useEffect(() => {
+        getAllExpenses();
+    }, [getAllExpenses]);
+
     return (
         <>
-            {expenseCtx.err && <ErrorModal message={expenseCtx.err} />}
+            {expenseErr && <ErrorModal message={expenseErr} />}
             {isOpen && <ExpenseForm onToggle={clickHandler} />}
             {!isOpen && (
                 <div
@@ -26,8 +48,8 @@ const Expenses = () => {
                 </div>
             )}
 
-            {expenseCtx.expenses.length > 0 && <ExpenseList />}
-            {expenseCtx.expenses.length === 0 && (
+            {expenses.length > 0 && <ExpenseList />}
+            {expenses.length === 0 && (
                 <h1 className="tc mt5">No Expenses Found</h1>
             )}
         </>

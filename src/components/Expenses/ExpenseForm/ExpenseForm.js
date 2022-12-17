@@ -1,21 +1,32 @@
 import React, { useContext, useRef } from "react";
-import ExpenseContext from "../../../store/expense-context";
+import { useDispatch } from "react-redux";
+import { expenseActions } from "../../../store/expenseSlice";
+import { expenseAdd } from "../../../utils/expenseApi";
 
 const ExpenseForm = (props) => {
-    const expenseCtx = useContext(ExpenseContext);
+    const dispatch = useDispatch();
 
     const amountRef = useRef();
     const descriptionRef = useRef();
     const categoryRef = useRef();
 
-    const submitHandler = (event) => {
+    const submitHandler = async (event) => {
         event.preventDefault();
 
-        const price = amountRef.current.value;
+        const price = Number(amountRef.current.value);
         const description = descriptionRef.current.value;
         const category = categoryRef.current.value;
 
-        expenseCtx.onAdd({ price, description, category });
+        const newItem = { price, description, category };
+        // send add http request
+        const { res, data } = await expenseAdd(newItem);
+
+        if (res.ok) {
+            const item = { ...newItem, id: data.name };
+            dispatch(expenseActions.addExpense(item));
+        } else {
+            dispatch(expenseActions.errorInExpense(data.error.message));
+        }
 
         props.onToggle();
     };

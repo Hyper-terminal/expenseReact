@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { signup } from "../../utils/authApi";
 import ErrorModal from "../UI/Modals/ErrorModal";
 
 const AuthSignup = () => {
@@ -23,48 +24,22 @@ const AuthSignup = () => {
 
     const submitHandler = async (event) => {
         event.preventDefault();
+        if (formData.password !== formData.confirmPassword) {
+            alert("password not matched!");
+            return;
+        }
 
         try {
-            if (formData.password !== formData.confirmPassword) {
-                alert("password not matched!");
-                return;
-            }
-
             // make post request to backend
-
-            const res = await fetch(
-                `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_API}`,
-                {
-                    method: "post",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email: formData.email,
-                        password: formData.password,
-                        returnSecureToken: true,
-                    }),
-                }
-            );
-
-            const data = await res.json();
+            const { res, data } = await signup(formData);
 
             if (res.ok) {
-                // clear fields
-
-                setFormData({
-                    email: "",
-                    password: "",
-                    confirmPassword: "",
-                });
-
-                navigate("/", { replace: true });
+                navigate("/auth/signin", { replace: true });
             } else {
                 setErr(data.error.message);
-                new Error(data.error.message);
             }
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            console.log(error);
         }
     };
 

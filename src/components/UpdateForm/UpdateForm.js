@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import profileIcon from "../../assets/name_icon.svg";
 import userImageIcon from "../../assets/user_image.svg";
+import { updateUserDetails } from "../../utils/authApi";
 
 const UpdateForm = () => {
     const idToken = useSelector((state) => state.auth.token);
@@ -18,23 +19,7 @@ const UpdateForm = () => {
         const picUrl = picUrlRef.current.value;
 
         // send request to backend for update
-        const res = await fetch(
-            `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${process.env.REACT_APP_FIREBASE_API}`,
-            {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    returnSecureToken: true,
-                    idToken: idToken,
-                    displayName: fullName,
-                    photoUrl: picUrl,
-                }),
-            }
-        );
-
-        const data = await res.json();
+        const {res} = await updateUserDetails(idToken, picUrl, fullName);
 
         if (res.ok) {
             navigate("/expenses", { replace: true });

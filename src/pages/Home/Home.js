@@ -3,6 +3,7 @@ import Profile from "../../components/UI/Modals/Profile";
 import UpdateForm from "../../components/UpdateForm/UpdateForm";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/authSlice";
+import { getDetails } from "../../utils/authApi";
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -19,25 +20,12 @@ const Home = () => {
     };
 
     const fetchUpdateDetails = useCallback(async () => {
-        const res = await fetch(
-            `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.REACT_APP_FIREBASE_API}`,
-            {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    idToken: token,
-                }),
-            }
-        );
-
-        const data = await res.json();
+        const { res, data } = await getDetails(token);
 
         if (res.ok) {
-            dispatch(
-                authActions.update(data.users[0].displayName ? true : false)
-            );
+            const verify = data.users[0].emailVerified;
+            const profile = data.users[0].displayName ? true : false;
+            dispatch(authActions.update({ verify, profile }));
         } else {
             console.log("Token not valid");
         }

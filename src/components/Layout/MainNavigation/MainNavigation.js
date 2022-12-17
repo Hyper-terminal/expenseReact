@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { authActions } from "../../../store/authSlice";
+import { emailVerification } from "../../../utils/authApi";
 
 const MainNavigation = () => {
     const dispatch = useDispatch();
@@ -26,22 +27,7 @@ const MainNavigation = () => {
     };
 
     const verifyEmailHandler = async () => {
-        const res = await fetch(
-            `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.REACT_APP_FIREBASE_API}`,
-            {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    requestType: "VERIFY_EMAIL",
-                    idToken: idToken,
-                }),
-            }
-        );
-
-        const data = await res.json();
-
+        const { res } = emailVerification(idToken);
         if (res.ok) {
             alert("Email verification link sent to your email.");
         } else {

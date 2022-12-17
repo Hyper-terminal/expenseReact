@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useContext } from "react";
-import ExpenseContext from "../../../store/expense-context";
+import { useDispatch } from "react-redux";
+import { expenseActions } from "../../../store/expenseSlice";
+import { expenseUpdate } from "../../../utils/expenseApi";
 import classes from "./EditModal.module.css";
 
 const EditModal = (props) => {
-    const expenseCtx = useContext(ExpenseContext);
+    const dispatch = useDispatch();
 
     const amountRef = useRef();
     const descriptionRef = useRef();
@@ -15,15 +17,25 @@ const EditModal = (props) => {
         categoryRef.current.value = props.item.category;
     }, []);
 
-    const submitHandler = (event) => {
+    const submitHandler = async (event) => {
         event.preventDefault();
 
         const newItem = {
-            price: amountRef.current.value,
+            price: Number(amountRef.current.value),
             description: descriptionRef.current.value,
             category: categoryRef.current.value,
         };
-        expenseCtx.onUpdate(newItem, props.item.id);
+        // update in database
+        const { res, data } = await expenseUpdate(props.item.id, newItem);
+
+        if (res.ok) {
+            dispatch(
+                expenseActions.updateExpense({ id: props.item.id, newItem })
+            );
+        } else {
+            dispatch(expenseActions.errorInExpense(data.error.message));
+        }
+
         props.onToggle();
     };
 

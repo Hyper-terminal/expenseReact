@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import passwordImage from "../../assets/password_change.jpg";
+import { passwordChange } from "../../utils/authApi";
 
 const PasswordChange = () => {
     const [email, setEmail] = useState("");
@@ -8,22 +9,8 @@ const PasswordChange = () => {
         setEmail(e.target.value);
     }
 
-    async function submitHandler(event) {
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.REACT_APP_FIREBASE_API}`;
-
-        const res = await fetch(url, {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: email,
-                requestType: "PASSWORD_RESET",
-            }),
-        });
-
-        const data = await res.json();
-
+    async function submitHandler() {
+        const { res } = await passwordChange(email);
         if (res.ok) {
             setEmail("");
             alert("Request sent to your email address");

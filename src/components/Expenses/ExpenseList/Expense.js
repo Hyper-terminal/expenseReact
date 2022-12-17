@@ -1,23 +1,31 @@
-import React, { useContext, useState } from "react";
-import ExpenseContext from "../../../store/expense-context";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { expenseActions } from "../../../store/expenseSlice";
 import EditModal from "../../UI/Modals/EditModal";
+import { expenseRemove } from "../../../utils/expenseApi";
 
 const Expense = (props) => {
-    const expenseCtx = useContext(ExpenseContext);
+    const dispatch = useDispatch();
 
     const [isShown, setIsShown] = useState(false);
 
-    const deleteHandler = () => {
-        expenseCtx.onRemove(props.id);
+    const deleteHandler = async () => {
+        const { res, data } = await expenseRemove(props.id);
+
+        if (res.ok) {
+            dispatch(expenseActions.removeExpense(props.id));
+        } else {
+            dispatch(expenseActions.errorInExpense(data.error.message));
+        }
     };
 
-    const updateHandler = () => {
-        setIsShown(prev => !prev);
+    const updateModalToggleHandler = () => {
+        setIsShown((prev) => !prev);
     };
 
     return (
         <>
-            {isShown && <EditModal onToggle={updateHandler} item={props}/>}
+            {isShown && <EditModal onToggle={updateModalToggleHandler} item={props} />}
 
             <div className="mw6 center shadow-5 db br3 pa2 mt4 ml3 mr3 bg-moon-gray">
                 <div className="flex flex-column align-between athelas ml0 mt0 pl4 black-90 bl bw2 b--blue">
@@ -45,7 +53,7 @@ const Expense = (props) => {
                         Delete
                     </button>
                     <button
-                        onClick={updateHandler}
+                        onClick={updateModalToggleHandler}
                         className="f6 shadow-5 link dim ph3 mr4 ml4 pv2 mb2 dib white bg-purple br3 pointer b--none"
                     >
                         Edit

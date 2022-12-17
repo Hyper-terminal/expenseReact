@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { authActions } from "../../store/authSlice";
+import { signin } from "../../utils/authApi";
 import ErrorModal from "../UI/Modals/ErrorModal";
 
 const AuthSignin = () => {
@@ -28,45 +29,21 @@ const AuthSignin = () => {
 
     const submitHandler = async (event) => {
         event.preventDefault();
-
         try {
             // make post request to backend
-
-            const res = await fetch(
-                `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_API}`,
-                {
-                    method: "post",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email: formData.email,
-                        password: formData.password,
-                        returnSecureToken: true,
-                    }),
-                }
-            );
-
-            const data = await res.json();
+            const { res, data } = await signin(formData);
 
             if (res.ok) {
                 // change state and store token
                 dispatch(authActions.login(data.idToken));
 
-                // clear fields
-                setFormData({
-                    email: "",
-                    password: "",
-                });
-
                 // redirect the user
                 navigate("/", { replace: true });
             } else {
                 setErr(data.error.message);
-                throw new Error(data.error.message);
             }
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            console.log(error);
         }
     };
 
