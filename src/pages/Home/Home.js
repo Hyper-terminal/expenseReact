@@ -1,26 +1,59 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Profile from "../../components/UI/Modals/Profile";
-import AuthContext from "../../store/auth-context";
 import UpdateForm from "../../components/UpdateForm/UpdateForm";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../../store/authSlice";
 
 const Home = () => {
-    const authCtx = useContext(AuthContext);
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const token = useSelector((state) => state.auth.token);
 
+    const isProfileComplete = useSelector(
+        (state) => state.auth.isProfileComplete
+    );
     const [isOpen, setIsOpen] = useState(false);
 
     const formToggleHandler = () => {
         setIsOpen(true);
     };
 
+    const fetchUpdateDetails = useCallback(async () => {
+        const res = await fetch(
+            `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.REACT_APP_FIREBASE_API}`,
+            {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    idToken: token,
+                }),
+            }
+        );
+
+        const data = await res.json();
+
+        if (res.ok) {
+            dispatch(
+                authActions.update(data.users[0].displayName ? true : false)
+            );
+        } else {
+            console.log("Token not valid");
+        }
+    });
+
+    useEffect(() => {
+        fetchUpdateDetails();
+    }, [fetchUpdateDetails]);
+
     return (
         <>
-            {authCtx.isAuthenticated &&
-                !authCtx.isProfileCompleted &&
-                !isOpen && <Profile onClick={formToggleHandler} />}
-            {authCtx.isAuthenticated &&
-                !authCtx.isProfileCompleted &&
-                isOpen && <UpdateForm />}
-            {!authCtx.isAuthenticated && (
+            {isAuthenticated && !isProfileComplete && !isOpen && (
+                <Profile onClick={formToggleHandler} />
+            )}
+            {isAuthenticated && !isProfileComplete && isOpen && <UpdateForm />}
+            {!isAuthenticated && (
                 <div className="tc">
                     <h1>Home Page</h1>
                     <p>
@@ -29,7 +62,9 @@ const Home = () => {
                     </p>
                 </div>
             )}
-            {/* {authCtx.isAuthenticated && <h1 className="tc fw-8">Home</h1>} */}
+            {isAuthenticated && isProfileComplete && (
+                <h1 className="tc">Home Page</h1>
+            )}
         </>
     );
 };

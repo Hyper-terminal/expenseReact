@@ -19,7 +19,7 @@ const Expense = (props) => {
         <>
             {isShown && <EditModal onToggle={updateHandler} item={props}/>}
 
-            <div className="mw6 shadow-5 db br3 pa2 mt4 ml3 mr3 bg-moon-gray">
+            <div className="mw6 center shadow-5 db br3 pa2 mt4 ml3 mr3 bg-moon-gray">
                 <div className="flex flex-column align-between athelas ml0 mt0 pl4 black-90 bl bw2 b--blue">
                     <h4>
                         <span className="uderline purple fw8">PRICE: </span> ₹

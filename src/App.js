@@ -2,13 +2,11 @@ import React, { Suspense, useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout/Layout";
 import LoadingSpinner from "./components/UI/LoadingSpinner/LoadingSpinner";
-import AuthContext from "./store/auth-context";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
+import { useSelector } from "react-redux";
 
 const Expenses = React.lazy(() => import("./pages/Expenses/Expenses"));
-const UpdateForm = React.lazy(() =>
-    import("./components/UpdateForm/UpdateForm")
-);
+
 
 const PasswordChange = React.lazy(() =>
     import("./pages/PasswordChange/PasswordChange")
@@ -24,7 +22,8 @@ const About = React.lazy(() => import("./pages/About/About"));
 const Home = React.lazy(() => import("./pages/Home/Home"));
 
 const App = () => {
-    const authCtx = useContext(AuthContext);
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
     return (
         <Suspense fallback={<LoadingSpinner />}>
             <Layout>
@@ -33,11 +32,11 @@ const App = () => {
 
                     <Route path="/about" element={<About />} />
 
-                    {authCtx.isAuthenticated && (
+                    {isAuthenticated && (
                         <Route path="/expenses" element={<Expenses />} />
                     )}
 
-                    {!authCtx.isAuthenticated && (
+                    {!isAuthenticated && (
                         <Route path="/auth">
                             <Route path="signin" element={<AuthSignin />} />
                             <Route path="signup" element={<AuthSignup />} />

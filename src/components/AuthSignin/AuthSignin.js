@@ -1,11 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import AuthContext from "../../store/auth-context";
+import { authActions } from "../../store/authSlice";
 import ErrorModal from "../UI/Modals/ErrorModal";
 
 const AuthSignin = () => {
+    const dispatch = useDispatch();
+
     const navigate = useNavigate();
-    const authCtx = useContext(AuthContext);
 
     const [err, setErr] = useState("");
 
@@ -44,12 +46,12 @@ const AuthSignin = () => {
                     }),
                 }
             );
-            
+
             const data = await res.json();
 
             if (res.ok) {
                 // change state and store token
-                authCtx.onLogin(data.idToken);
+                dispatch(authActions.login(data.idToken));
 
                 // clear fields
                 setFormData({

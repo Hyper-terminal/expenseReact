@@ -1,17 +1,23 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import AuthContext from "../../../store/auth-context";
+import { authActions } from "../../../store/authSlice";
 
 const MainNavigation = () => {
-    const authCtx = useContext(AuthContext);
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const idToken = useSelector((state) => state.auth.token);
+    const isVerified = useSelector((state) => state.auth.isVerified);
+    const isProfileComplete = useSelector(
+        (state) => state.auth.isProfileComplete
+    );
+
     const navigate = useNavigate();
 
-    const isLogin = authCtx.isAuthenticated;
-
     const clickHandler = () => {
-        if (isLogin) {
+        if (isAuthenticated) {
             // means logout
-            authCtx.onLogout();
+            dispatch(authActions.logout());
             navigate("/auth/signin", { replace: true });
         } else {
             // means login
@@ -29,7 +35,7 @@ const MainNavigation = () => {
                 },
                 body: JSON.stringify({
                     requestType: "VERIFY_EMAIL",
-                    idToken: authCtx.token,
+                    idToken: idToken,
                 }),
             }
         );
@@ -60,7 +66,7 @@ const MainNavigation = () => {
                     >
                         Home
                     </NavLink>
-                    {authCtx.isAuthenticated && (
+                    {isAuthenticated && (
                         <NavLink
                             className="f6 f5-l link bg-animate black-80 hover-bg-light-green dib pa3 ph4-l"
                             to="/expenses"
@@ -88,10 +94,10 @@ const MainNavigation = () => {
                         onClick={clickHandler}
                         className="link pointer underline dark-green hover-light-green dark-gray f6 f5-ns dib mr3 mr4-ns"
                     >
-                        {isLogin ? "Logout" : "Login"}
+                        {isAuthenticated ? "Logout" : "Login"}
                     </div>
 
-                    {!authCtx.isVerified && authCtx.isProfileCompleted && (
+                    {!isVerified && isProfileComplete && (
                         <div
                             onClick={verifyEmailHandler}
                             className="link pointer underline dark-blue hover-light-blue dark-gray f6 f5-ns dib mr3 mr4-ns"

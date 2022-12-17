@@ -1,14 +1,15 @@
 import React, { useContext, useRef } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import profileIcon from "../../assets/name_icon.svg";
 import userImageIcon from "../../assets/user_image.svg";
-import AuthContext from "../../store/auth-context";
 
-const UpdateForm = (props) => {
-    const authCtx = useContext(AuthContext);
+const UpdateForm = () => {
+    const idToken = useSelector((state) => state.auth.token);
+    const navigate = useNavigate();
 
     const nameRef = useRef();
     const picUrlRef = useRef();
-
 
     const submitHandler = async (event) => {
         event.preventDefault();
@@ -17,7 +18,6 @@ const UpdateForm = (props) => {
         const picUrl = picUrlRef.current.value;
 
         // send request to backend for update
-
         const res = await fetch(
             `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${process.env.REACT_APP_FIREBASE_API}`,
             {
@@ -27,7 +27,7 @@ const UpdateForm = (props) => {
                 },
                 body: JSON.stringify({
                     returnSecureToken: true,
-                    idToken: authCtx.token,
+                    idToken: idToken,
                     displayName: fullName,
                     photoUrl: picUrl,
                 }),
@@ -37,7 +37,7 @@ const UpdateForm = (props) => {
         const data = await res.json();
 
         if (res.ok) {
-            console.log(data);
+            navigate("/expenses", { replace: true });
         } else {
             alert(data.error.message);
         }
