@@ -1,5 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -14,3 +24,9 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
         monospace;
 }
+
+.dark_mode {
+    background-color: black;
+    color: white;
+}
+

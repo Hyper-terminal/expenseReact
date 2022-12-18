@@ -32,7 +32,7 @@ const ExpenseForm = (props) => {
     };
 
     return (
-        <main className="pa4  black-80">
+        <main className="pa4 ">
             <form
                 onSubmit={submitHandler}
                 className="pa4 br2 bl bb shadow-5 mw6 center"

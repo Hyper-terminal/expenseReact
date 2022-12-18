@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { authActions } from "../../../store/authSlice";
+import { themeActions } from "../../../store/themeSlice";
 import { emailVerification } from "../../../utils/authApi";
 
 const MainNavigation = () => {
@@ -9,6 +10,9 @@ const MainNavigation = () => {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const idToken = useSelector((state) => state.auth.token);
     const isVerified = useSelector((state) => state.auth.isVerified);
+    const premium = useSelector((state) => state.expense.premium);
+    const theme = useSelector((state) => state.theme.theme);
+
     const isProfileComplete = useSelector(
         (state) => state.auth.isProfileComplete
     );
@@ -35,16 +39,24 @@ const MainNavigation = () => {
         }
     };
 
+    const themeToggleHandler = () => {
+        if (theme) {
+            dispatch(themeActions.forNormal());
+        } else {
+            dispatch(themeActions.forPremium());
+        }
+    };
+
     return (
         <>
-            <header className="bb bg-near-white black-80 tc pb4 avenir">
+            <header className="bb  tc pb4 avenir">
                 <h1 className="mt0 mb0 baskerville i fw1 f1">Title</h1>
                 <h2 className="mt2 mb0 f6 fw4 ttu tracked">
                     Your amazing subtitle
                 </h2>
                 <nav className="bt bb tc mw7 center mt4">
                     <NavLink
-                        className="f6 f5-l link bg-animate black-80 hover-bg-lightest-blue dib pa3 ph4-l"
+                        className="f6 f5-l link bg-animate  hover-bg-lightest-blue dib pa3 ph4-l"
                         to="/"
                         style={({ isActive }) =>
                             isActive ? { background: "#CDECFF " } : undefined
@@ -54,7 +66,7 @@ const MainNavigation = () => {
                     </NavLink>
                     {isAuthenticated && (
                         <NavLink
-                            className="f6 f5-l link bg-animate black-80 hover-bg-light-green dib pa3 ph4-l"
+                            className="f6 f5-l link bg-animate  hover-bg-light-green dib pa3 ph4-l"
                             to="/expenses"
                             style={({ isActive }) =>
                                 isActive
@@ -67,7 +79,7 @@ const MainNavigation = () => {
                     )}
 
                     <NavLink
-                        className="f6 f5-l mr4 link bg-animate black-80 hover-bg-light-pink dib pa3 ph4-l"
+                        className="f6 f5-l mr4 link bg-animate  hover-bg-light-pink dib pa3 ph4-l"
                         to="/about"
                         style={({ isActive }) =>
                             isActive ? { background: "#FFA3D7 " } : undefined
@@ -91,6 +103,26 @@ const MainNavigation = () => {
                             Verify Email
                         </div>
                     )}
+                    {premium && (
+                        <NavLink
+                            className="f6 f5-l link bg-animate  hover-bg-lightest-blue dib pa3 ph4-l"
+                            to="/"
+                            style={({ isActive }) =>
+                                isActive
+                                    ? { background: "#CDECFF " }
+                                    : undefined
+                            }
+                        >
+                            Activate Premium
+                        </NavLink>
+                    )}
+
+                    <div
+                        onClick={themeToggleHandler}
+                        className="link pointer underline dark-red hover-light-green dark-gray f6 f5-ns dib mr3 mr4-ns"
+                    >
+                        {theme ? "Light" : "Dark"}
+                    </div>
                 </nav>
             </header>
         </>

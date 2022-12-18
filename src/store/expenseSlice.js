@@ -20,11 +20,14 @@ const expenseSlice = createSlice({
                 });
                 state.totalAmount = totalAmount;
             }
+
+            state.premium = state.totalAmount > 10000 ? true : false;
         },
 
         addExpense(state, action) {
             state.totalAmount += action.payload.price;
             state.expenses = [action.payload, ...state.expenses];
+            state.premium = state.totalAmount > 10000 ? true : false;
         },
 
         removeExpense(state, action) {
@@ -39,6 +42,8 @@ const expenseSlice = createSlice({
             state.expenses = state.expenses.filter(
                 (item) => item.id !== action.payload
             );
+
+            state.premium = state.totalAmount > 10000 ? true : false;
         },
 
         errorInExpense(state, action) {
@@ -57,6 +62,8 @@ const expenseSlice = createSlice({
                 state.totalAmount + newItem.price - state.expenses[idx].price;
 
             state.expenses[idx] = { ...newItem, id: id };
+
+            state.premium = state.totalAmount > 10000 ? true : false;
         },
     },
 });

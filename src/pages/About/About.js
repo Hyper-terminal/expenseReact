@@ -1,6 +1,6 @@
 const About = () => {
     return (
-        <div className="measure center">
+        <div className="measure center vh-100">
             <h1 className="underline">About Us</h1>
             <p>
                 <span className="f1 fw8">L</span>orem ipsum dolor sit amet

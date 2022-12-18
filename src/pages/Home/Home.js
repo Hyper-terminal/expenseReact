@@ -36,7 +36,7 @@ const Home = () => {
     }, [fetchUpdateDetails]);
 
     return (
-        <>
+        <div className="vh-100">
             {isAuthenticated && !isProfileComplete && !isOpen && (
                 <Profile onClick={formToggleHandler} />
             )}
@@ -53,7 +53,7 @@ const Home = () => {
             {isAuthenticated && isProfileComplete && (
                 <h1 className="tc">Home Page</h1>
             )}
-        </>
+        </div>
     );
 };
 

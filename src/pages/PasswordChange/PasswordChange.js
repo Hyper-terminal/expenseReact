@@ -20,7 +20,7 @@ const PasswordChange = () => {
     }
 
     return (
-        <section className="ph3 ph5-ns pv5">
+        <section className="ph3 vh-100 ph5-ns pv5">
             <article className="mw8 shadow-5 center br2 ba b--light-blue bg-lightest-blue">
                 <div className="dt-ns dt--fixed-ns w-100">
                     <div className="dtc-ns bg-washed-red tc pa3 pa4-ns v-mid">

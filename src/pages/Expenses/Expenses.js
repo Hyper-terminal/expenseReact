@@ -5,6 +5,7 @@ import ExpenseList from "../../components/Expenses/ExpenseList/ExpenseList";
 import ErrorModal from "../../components/UI/Modals/ErrorModal";
 import { expenseActions } from "../../store/expenseSlice";
 import { getExpenses } from "../../utils/expenseApi";
+import { CSVLink } from "react-csv";
 
 const Expenses = () => {
     const expenseErr = useSelector((state) => state.expense.error);
@@ -35,23 +36,36 @@ const Expenses = () => {
         getAllExpenses();
     }, [getAllExpenses]);
 
+    // csv
+
+    const data = [
+        ["category", "Amount", "Description"],
+
+        expenses.map((item) => [item.category, item.amount, item.description]),
+    ];
+
     return (
         <>
-            {expenseErr && <ErrorModal message={expenseErr} />}
-            {isOpen && <ExpenseForm onToggle={clickHandler} />}
-            {!isOpen && (
-                <div
-                    onClick={clickHandler}
-                    className="mw8 tc shadow-5 fw6 f3 lh-copy center bg-animate mt4 pa3 pointer bg-light-purple hover-bg-purple br3"
-                >
-                    Add Expense
-                </div>
+            {expenses.length > 0 && (
+                <CSVLink data={data}>Download your expenses</CSVLink>
             )}
+            <div className="vh-100">
+                {expenseErr && <ErrorModal message={expenseErr} />}
+                {isOpen && <ExpenseForm onToggle={clickHandler} />}
+                {!isOpen && (
+                    <div
+                        onClick={clickHandler}
+                        className="mw8 w-50 tc shadow-5 fw6 f3 lh-copy center bg-animate mt4 pa3 pointer bg-light-purple hover-bg-purple br3"
+                    >
+                        Add Expense
+                    </div>
+                )}
 
-            {expenses.length > 0 && <ExpenseList />}
-            {expenses.length === 0 && (
-                <h1 className="tc mt5">No Expenses Found</h1>
-            )}
+                {expenses.length > 0 && <ExpenseList />}
+                {expenses.length === 0 && (
+                    <h1 className="tc mt5">No Expenses Found</h1>
+                )}
+            </div>
         </>
     );
 };

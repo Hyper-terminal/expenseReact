@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 
 const Expenses = React.lazy(() => import("./pages/Expenses/Expenses"));
 
-
 const PasswordChange = React.lazy(() =>
     import("./pages/PasswordChange/PasswordChange")
 );
@@ -23,34 +22,37 @@ const Home = React.lazy(() => import("./pages/Home/Home"));
 
 const App = () => {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
+    const theme = useSelector((state) => state.theme.theme);
+    console.log(theme);
     return (
-        <Suspense fallback={<LoadingSpinner />}>
-            <Layout>
-                <Routes>
-                    <Route path="/" element={<Home />} />
+        <div className={theme ? theme : ""}>
+            <Suspense fallback={<LoadingSpinner />}>
+                <Layout>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
 
-                    <Route path="/about" element={<About />} />
+                        <Route path="/about" element={<About />} />
 
-                    {isAuthenticated && (
-                        <Route path="/expenses" element={<Expenses />} />
-                    )}
+                        {isAuthenticated && (
+                            <Route path="/expenses" element={<Expenses />} />
+                        )}
 
-                    {!isAuthenticated && (
-                        <Route path="/auth">
-                            <Route path="signin" element={<AuthSignin />} />
-                            <Route path="signup" element={<AuthSignup />} />
-                            <Route
-                                path="password_forget"
-                                element={<PasswordChange />}
-                            />
-                        </Route>
-                    )}
+                        {!isAuthenticated && (
+                            <Route path="/auth">
+                                <Route path="signin" element={<AuthSignin />} />
+                                <Route path="signup" element={<AuthSignup />} />
+                                <Route
+                                    path="password_forget"
+                                    element={<PasswordChange />}
+                                />
+                            </Route>
+                        )}
 
-                    <Route path="*" element={<ErrorPage />} />
-                </Routes>
-            </Layout>
-        </Suspense>
+                        <Route path="*" element={<ErrorPage />} />
+                    </Routes>
+                </Layout>
+            </Suspense>
+        </div>
     );
 };
 

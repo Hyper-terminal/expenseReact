@@ -44,7 +44,7 @@ const AuthSignup = () => {
     };
 
     return (
-        <main className="pa4  black-80">
+        <main className="pa4 vh-100">
             <form
                 onSubmit={submitHandler}
                 className="pa4 br2 shadow-3 measure center"
@@ -104,7 +104,7 @@ const AuthSignup = () => {
                     </button>
                 </div>
                 <div className="lh-copy mt3">
-                    <Link to="/auth/signin" className="f6 link dim black dib">
+                    <Link to="/auth/signin" className="f6 link dim  dib">
                         Have an account? Login
                     </Link>
                 </div>
